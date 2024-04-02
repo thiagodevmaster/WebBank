@@ -1,12 +1,11 @@
 <?php
 
 namespace App\models\Clients;
-use App\models\Account\Account;
 use App\models\Account\AccountInterface;
 use App\models\Client\ClientInterface;
-use App\models\CpfInterface;
 use App\models\Passwords\PasswordInterface;
-use CnpjInterface;
+use App\models\{CpfInterface, CnpjInterface};
+
 
 class Client implements ClientInterface
 {
@@ -62,21 +61,26 @@ class Client implements ClientInterface
 
     public function getAccounts(): array
     {
-        
+        return $this->accounts;
     }
 
     public function addAccount(AccountInterface $account): void
     {
-        
+        $this->accounts[] = $account;
     }
 
     public function removeAccount(AccountInterface $account): void
     {
-        
+        foreach ($this->accounts as $key => $acc) {
+            if ($acc->getId() == $account->getId()) {
+                unset($this->accounts[$key]);
+                return;
+            }
+        }
     }
 
     public function canTransfer(): bool
     {
-        
+        return true;
     }
 }

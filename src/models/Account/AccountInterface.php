@@ -5,6 +5,8 @@ use App\models\Decimal;
 
 interface AccountInterface
 {
+    public function getId(): int;
+
     public function getBalance(): Decimal;
 
     public function deposit(Decimal $amount): void;

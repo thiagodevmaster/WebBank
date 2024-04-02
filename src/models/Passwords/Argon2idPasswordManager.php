@@ -63,18 +63,30 @@ class Argon2idPasswordManager implements PasswordInterface
         return $hash;
     }
 
-    public function verify(string $password, string $hashadPassword): bool 
+    public function verify(string $password, string $hashedPassword): bool 
     {
-        if(!password_verify($password, $hashadPassword)){
+        $salt = $this->extractSaltFromHash($hashedPassword);
+        $options = ['salt' => $salt];
+        $rehashedPassword = password_hash($password, PASSWORD_ARGON2ID, $options);
+
+        if(!password_verify($password, $rehashedPassword)){
             return false;
         }
 
         return true;
     }
 
+    protected function extractSaltFromHash(string $hashedPassword): string
+    {
+        $parts = explode('$', $hashedPassword);
+        
+        return isset($parts[3]) ? $parts[3] : '';
+    }
+
     public function resetPassword(Client $client, string $newPassword): bool 
     {
-
+        // TODO
+        return true;
     }
 
     public function generateSalt(): string 

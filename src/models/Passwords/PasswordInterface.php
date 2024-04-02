@@ -7,6 +7,8 @@ interface PasswordInterface
 {
     protected function validatePassword(string $password): bool;
 
+    protected function extractSaltFromHash(string $hashedPassword): string;
+
     public function hash(string $password): string;
 
     public function verify(string $password, string $hashadPassword): bool;

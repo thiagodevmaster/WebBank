@@ -1,5 +1,7 @@
 <?php
 
+namespace App\models;
+
 interface CnpjInterface
 {
     public function isValid(): bool;
