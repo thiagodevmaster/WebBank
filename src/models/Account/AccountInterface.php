@@ -1,6 +1,7 @@
 <?php
 
 namespace App\models\Account;
+use App\models\Decimal;
 
 interface AccountInterface
 {

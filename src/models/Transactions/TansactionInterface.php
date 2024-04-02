@@ -1,6 +1,7 @@
 <?php
 
 namespace App\models\Transaction;
+use App\models\Decimal;
 
 interface TransactionInterface
 {
