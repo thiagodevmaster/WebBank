@@ -7,7 +7,7 @@ use App\models\Passwords\PasswordInterface;
 use App\models\{CpfInterface, CnpjInterface};
 
 
-class Client implements ClientInterface
+abstract class Client implements ClientInterface
 {
     private ?int $id;
     private AccountInterface $account;
@@ -79,8 +79,5 @@ class Client implements ClientInterface
         }
     }
 
-    public function canTransfer(): bool
-    {
-        return true;
-    }
+    abstract public function canTransfer(): bool;
 }

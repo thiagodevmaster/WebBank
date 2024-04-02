@@ -18,7 +18,7 @@ class RegularClient extends Client
         parent::__construct($name, "regular", $email, $password, $cpf, $cnpj, $status);
     }
 
-    public function canTransfer(): bool
+    final public function canTransfer(): bool
     {
         return true;
     }
