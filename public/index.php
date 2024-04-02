@@ -1,19 +1,61 @@
-<!-- HTML for static distribution bundle build -->
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Swagger UI</title>
-    <link rel="stylesheet" type="text/css" href="./../../swagger-ui/swagger-ui.css" />
-    <link rel="stylesheet" type="text/css" href="index.css" />
-    <link rel="icon" type="image/png" href="./../../swagger-ui/favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="./../../swagger-ui/favicon-16x16.png" sizes="16x16" />
-  </head>
+<?php
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7Server\ServerRequestCreator;
 
-  <body>
-    <div id="swagger-ui"></div>
-    <script src="./../../swagger-ui/swagger-ui-bundle.js" charset="UTF-8"> </script>
-    <script src="./../../swagger-ui/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
-    <script src="./../../swagger-ui/swagger-initializer.js" charset="UTF-8"> </script>
-  </body>
-</html>
+session_start();
+session_regenerate_id();
+require_once __DIR__ . "/../vendor/autoload.php";
+
+$pathInfo = $_SERVER['REQUEST_URI'] ?? "/";
+$httpMethod = $_SERVER['REQUEST_METHOD'];
+
+$key = "$httpMethod|$pathInfo";
+
+$routes = require_once __DIR__ . "/../routes/api/web.php";
+$dependencyContainer = require_once __DIR__ . "/../config/dependency.php";
+
+function findRoute($routes, $path) {
+  foreach ($routes as $groupRoutes) { 
+      foreach ($groupRoutes as $route => $action) {
+          if($path === $route) {
+              return $action;
+          }
+      }
+  }
+  return null;
+}
+
+$action = findRoute($routes, $key);
+
+
+if($action !== null){
+    $controller = $dependencyContainer->get($action);
+}else{
+    http_response_code(404);
+}
+
+$psr17Factory = new Psr17Factory();
+
+$creator = new ServerRequestCreator(
+    $psr17Factory, // ServerRequestFactory
+    $psr17Factory, // UriFactory
+    $psr17Factory, // UploadedFileFactory
+    $psr17Factory  // StreamFactory
+);
+
+$request = $creator->fromGlobals();
+
+/**
+ * @var RequestHandleInteface $controller
+ **/
+$response = $controller->handle($request);
+
+http_response_code($response->getStatusCode());
+// Emit headers iteratively:
+     foreach ($response->getHeaders() as $name => $values) {
+             foreach ($values as $value) {
+                 header(sprintf('%s: %s', $name, $value), false);
+             }
+         }
+
+echo $response->getBody();

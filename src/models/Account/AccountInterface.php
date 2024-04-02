@@ -1,6 +1,7 @@
 <?php
 
 namespace App\models\Account;
+use App\models\Client\ClientInterface;
 use App\models\Decimal;
 
 interface AccountInterface
@@ -17,11 +18,10 @@ interface AccountInterface
 
     public function getAccountId(): int;
 
-    public function getClient(): Client;
+    public function getClient(): ClientInterface;
 
-    public function closeAccount(): bool;
+    public function closeAccount(): void;
 
     public function updateBalance(Decimal $newBalance): bool;
 
-    public function canTransfer(): bool;
 }

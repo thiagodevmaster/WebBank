@@ -1,15 +1,18 @@
 <?php
 
 namespace App\models\Account;
+use App\models\Client\ClientInterface;
 use App\models\Decimal;
 
 class Account implements AccountInterface
 {
     private ?int $id;
+    protected array $transactions = [];
 
     public function __construct(
-
-        private Decimal $balance = 0.0
+        private ClientInterface $client,
+        private Decimal $balance = 0.0,
+        private bool $status = true
     )
     {}
 
@@ -36,31 +39,27 @@ class Account implements AccountInterface
 
     public function getTransactions(): array
     {
-
+        return $this->transactions;
     }
 
     public function getAccountId(): int
     {
-
+        return $this->id;
     }
 
-    public function getClient(): Client
+    public function getClient(): ClientInterface
     {
-
+        return $this->client;
     }
 
-    public function closeAccount(): bool
+    public function closeAccount(): void
     {
-
+        $this->status = false;
     }
 
     public function updateBalance(Decimal $newBalance): bool
     {
-
+        $this->balance = $newBalance;
     }
 
-    public function canTransfer(): bool
-    {
-
-    }
 }
