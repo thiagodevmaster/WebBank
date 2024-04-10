@@ -2,9 +2,8 @@
 
 namespace App\models;
 use App\models\Exceptions\InvalidCNPJException;
-use CnpjInterface;
 
-class Cnpj implements CnpjInterface
+class Cnpj 
 {
 
     public function __construct(private string $cnpj)
@@ -13,6 +12,11 @@ class Cnpj implements CnpjInterface
     }
 
     public function __toString()
+    {
+        return $this->cnpj;
+    }
+
+    public function getValue(): string
     {
         return $this->cnpj;
     }

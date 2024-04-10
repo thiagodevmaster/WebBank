@@ -1,7 +1,7 @@
 <?php
 
 namespace App\models\Clients;
-use App\models\{CpfInterface, CnpjInterface};
+use App\models\Cnpj;
 use App\models\Passwords\PasswordInterface;
 
 class MerchantClient extends Client
@@ -10,15 +10,14 @@ class MerchantClient extends Client
         string $name,
         string $email,
         PasswordInterface $password,
-        ?CpfInterface $cpf = null,
-        ?CnpjInterface $cnpj = null,
+        Cnpj $cnpj,
         bool $status = true
     )
     {
-        parent::__construct($name, 'merchant', $email, $password, $cpf, $cnpj, $status);
+        parent::__construct($name, 'merchant', $email, $password, null, $cnpj, $status);
     }
 
-    final public function canTransfer(): bool
+    public function canTransfer(): bool
     {
         return false;
     }

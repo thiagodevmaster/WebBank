@@ -11,7 +11,7 @@ class Account implements AccountInterface
 
     public function __construct(
         private ClientInterface $client,
-        private Decimal $balance = 0.0,
+        private Decimal $balance = 0,
         private bool $status = true
     )
     {}
@@ -60,6 +60,8 @@ class Account implements AccountInterface
     public function updateBalance(Decimal $newBalance): bool
     {
         $this->balance = $newBalance;
+
+        return true;
     }
 
 }

@@ -3,13 +3,18 @@
 namespace App\models;
 use App\models\Exceptions\InvalidCPFException;
 
-class CPF implements CpfInterface
+class CPF
 {
     public function __construct(private string $cpf){
         $this->setCpf();
     }
 
     public function __toString()
+    {
+        return $this->cpf;
+    }
+
+    public function getValue(): string
     {
         return $this->cpf;
     }

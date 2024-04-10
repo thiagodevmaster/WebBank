@@ -2,14 +2,14 @@
 
 namespace App\models\Clients;
 use App\models\Account\AccountInterface;
-use App\models\Client\ClientInterface;
+use App\models\Clients\ClientInterface;
 use App\models\Passwords\PasswordInterface;
-use App\models\{CpfInterface, CnpjInterface};
+use App\models\{CPF, Cnpj};
 
 
 abstract class Client implements ClientInterface
 {
-    private ?int $id;
+    private ?int $id = null;
     private AccountInterface $account;
     private array $accounts = [];
 
@@ -18,8 +18,8 @@ abstract class Client implements ClientInterface
         private string $type,
         private string $email,
         private PasswordInterface $password,
-        private readonly ?CpfInterface $cpf = null,
-        private readonly ?CnpjInterface $cnpj = null,
+        private ?CPF $cpf = null,
+        private ?Cnpj $cnpj = null,
         private bool $status = true,
     )
     {
@@ -64,6 +64,16 @@ abstract class Client implements ClientInterface
         return $this->accounts;
     }
 
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password->getValue();
+    }
+
     public function addAccount(AccountInterface $account): void
     {
         $this->accounts[] = $account;
@@ -77,6 +87,15 @@ abstract class Client implements ClientInterface
                 return;
             }
         }
+    }
+
+    public function getDocument(): string
+    {
+        if($this->cpf !== null) {
+            return $this->cpf->getValue();
+        }
+
+        return $this->cnpj->getValue();
     }
 
     abstract public function canTransfer(): bool;

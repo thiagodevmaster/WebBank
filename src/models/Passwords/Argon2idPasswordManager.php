@@ -8,20 +8,29 @@ use Throwable;
 class Argon2idPasswordManager implements PasswordInterface
 {
     private string $password;
-    protected string $salt;
 
     public function __construct(string $password)
     {
-        try {
-            $this->validatePassword($password);
-            $this->salt = $this->generateSalt();
-            $this->password = $this->hash($password);
-        } catch (InvalidPasswordException $e) {
-            throw $e;
+        if ($this->isHashedPassword($password)) {
+            // Se a senha recebida já for um hash, armazene-a diretamente
+            $this->password = $password;
+        } else {
+            // Caso contrário, proceda normalmente com a validação, geração de salt e hash
+            try {
+                $this->validatePassword($password);
+                $this->password = $this->hash($password);
+            } catch (InvalidPasswordException $e) {
+                throw $e;
+            }
         }
     }
 
-    protected function validatePassword(string $password): bool
+    public function getValue(): string 
+    {
+        return $this->password;
+    }
+
+    public function validatePassword(string $password): bool
     {
         if(strlen($password) < 8) {
             throw new InvalidPasswordException("Senha menor que 8 dígitos");
@@ -43,7 +52,7 @@ class Argon2idPasswordManager implements PasswordInterface
         }
 
         // Verifica se a senha contém números sequenciais (ex: 123, 456)
-        if (preg_match('/\d{3}/', $password)) {
+        if (preg_match('/123|234|345|456|567|678|789/', $password)) {
             throw new InvalidPasswordException("A senha não pode conter números sequenciais");
         }
 
@@ -58,16 +67,13 @@ class Argon2idPasswordManager implements PasswordInterface
 
     public function hash(string $password): string 
     {
-        $options = ['salt' => $this->salt];
-        $hash = password_hash($password, PASSWORD_ARGON2ID, $options);
+        $hash = password_hash($password, PASSWORD_ARGON2ID);
         return $hash;
     }
 
     public function verify(string $password, string $hashedPassword): bool 
     {
-        $salt = $this->extractSaltFromHash($hashedPassword);
-        $options = ['salt' => $salt];
-        $rehashedPassword = password_hash($password, PASSWORD_ARGON2ID, $options);
+        $rehashedPassword = password_hash($password, PASSWORD_ARGON2ID);
 
         if(!password_verify($password, $rehashedPassword)){
             return false;
@@ -76,11 +82,9 @@ class Argon2idPasswordManager implements PasswordInterface
         return true;
     }
 
-    protected function extractSaltFromHash(string $hashedPassword): string
+    protected function isHashedPassword(string $password): bool
     {
-        $parts = explode('$', $hashedPassword);
-        
-        return isset($parts[3]) ? $parts[3] : '';
+        return strpos($password, '$argon2id$') === 0;
     }
 
     public function resetPassword(Client $client, string $newPassword): bool 
@@ -89,11 +93,6 @@ class Argon2idPasswordManager implements PasswordInterface
         return true;
     }
 
-    public function generateSalt(): string 
-    {
-        $bytes = base64_encode(random_bytes(7));
-        return $bytes;
-    }
 
     
 }

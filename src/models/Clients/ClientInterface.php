@@ -1,6 +1,6 @@
 <?php
 
-namespace App\models\Client;
+namespace App\models\Clients;
 use App\models\Account\AccountInterface;
 
 interface ClientInterface
@@ -19,5 +19,11 @@ interface ClientInterface
 
     public function removeAccount(AccountInterface $account): void;
 
+    public function getDocument(): string;
+
     public function canTransfer(): bool;
+
+    public function getEmail(): string;
+
+    public function getPassword(): string;
 }

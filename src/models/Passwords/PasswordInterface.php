@@ -5,9 +5,7 @@ use App\models\Clients\Client;
 
 interface PasswordInterface
 {
-    protected function validatePassword(string $password): bool;
-
-    protected function extractSaltFromHash(string $hashedPassword): string;
+    public function validatePassword(string $password): bool;
 
     public function hash(string $password): string;
 
@@ -15,5 +13,5 @@ interface PasswordInterface
 
     public function resetPassword(Client $client, string $newPassword): bool;
 
-    public function generateSalt(): string;
+    public function getValue(): string;
 }
