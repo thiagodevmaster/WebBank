@@ -2,6 +2,7 @@
 
 namespace App\models\Account;
 use App\models\Client\ClientInterface;
+use App\models\Clients\Client;
 use App\models\Decimal;
 
 interface AccountInterface
@@ -18,7 +19,7 @@ interface AccountInterface
 
     public function getAccountId(): int;
 
-    public function getClient(): ClientInterface;
+    public function getClient(): Client;
 
     public function closeAccount(): void;
 

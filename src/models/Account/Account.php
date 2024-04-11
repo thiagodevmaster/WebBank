@@ -2,6 +2,7 @@
 
 namespace App\models\Account;
 use App\models\Client\ClientInterface;
+use App\models\Clients\Client;
 use App\models\Decimal;
 
 class Account implements AccountInterface
@@ -10,7 +11,7 @@ class Account implements AccountInterface
     protected array $transactions = [];
 
     public function __construct(
-        private ClientInterface $client,
+        private Client $client,
         private Decimal $balance = 0,
         private bool $status = true
     )
@@ -47,7 +48,7 @@ class Account implements AccountInterface
         return $this->id;
     }
 
-    public function getClient(): ClientInterface
+    public function getClient(): Client
     {
         return $this->client;
     }

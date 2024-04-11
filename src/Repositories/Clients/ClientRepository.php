@@ -15,7 +15,7 @@ class ClientRepository implements ClientsRepositoryInterface
     public function __construct(private PDO $pdo)
     {}
 
-    public function createClient(Client $client): bool 
+    protected function createClient(Client $client): bool 
     {
         $sql = "INSERT INTO $this->tableName (cli_name, cli_cpf_cnpj, cli_email, cli_password, cli_type) VALUES (:name, :cpf_cnpj, :email, :password, :type);";
         $stmt = $this->pdo->prepare($sql);
@@ -28,7 +28,7 @@ class ClientRepository implements ClientsRepositoryInterface
         return $stmt->execute(); 
     }
 
-    public function updateClient(Client $client): bool 
+    protected function updateClient(Client $client): bool 
     {
         $sql = "UPDATE $this->tableName SET (cli_name = :name, cli_cpf_cnpj = :cpf_cnpj, cli_email = :email, cli_password = :password, cli_type = :type) WHERE cli_id = :id;";
         $stmt = $this->pdo->prepare($sql);
@@ -70,7 +70,7 @@ class ClientRepository implements ClientsRepositoryInterface
         return $ClientData[0];
     }
 
-    protected function save(Client $client): bool 
+    public function save(Client $client): bool 
     {
         if($client->getClientId() !== null){
             return $this->updateClient($client);

@@ -11,6 +11,7 @@ $httpMethod = $_SERVER['REQUEST_METHOD'];
 
 $key = "$httpMethod|$pathInfo";
 
+
 $routes = require_once __DIR__ . "/../routes/api/v1/web.php";
 $dependencyContainer = require_once __DIR__ . "/../config/dependency.php";
 
@@ -21,11 +22,13 @@ function findRoute($routes, $path) {
               return $action;
           }
       }
+    //   exit;
   }
   return null;
 }
 
 $action = findRoute($routes, $key);
+
 
 
 if($action !== null){

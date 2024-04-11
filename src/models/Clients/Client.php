@@ -38,7 +38,7 @@ abstract class Client implements ClientInterface
     }
 
 
-    public function getClientId(): int
+    public function getClientId(): ?int
     {
         return $this->id; 
     }

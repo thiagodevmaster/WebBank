@@ -29,4 +29,4 @@ $APP_URL = $_ENV['APP_URL_LOCAL'];
 
 // Outras Configurações
 $TIMEZONE = $_ENV['TIMEZONE'];
-$LOG_CHANNEL = $_ENV['LOG_CHANNEL'];
+// $LOG_CHANNEL = $_ENV['LOG_CHANNEL'];

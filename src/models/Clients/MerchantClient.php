@@ -14,7 +14,7 @@ class MerchantClient extends Client
         bool $status = true
     )
     {
-        parent::__construct($name, 'merchant', $email, $password, null, $cnpj, $status);
+        parent::__construct($name, 'm', $email, $password, null, $cnpj, $status);
     }
 
     public function canTransfer(): bool

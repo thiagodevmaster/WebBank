@@ -4,6 +4,8 @@ namespace App\Infra\Persistencia;
 use PDO;
 use PDOException;
 
+require_once __DIR__ . "/../../../config/config.php";
+
 final class ConnectionFactory
 {
     public static function CreateConnection(): PDO {
